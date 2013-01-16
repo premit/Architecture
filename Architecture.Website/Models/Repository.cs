@@ -42,7 +42,7 @@ namespace Architecture.Website.Models
         {
             _context.Entry<TEntity>(entity).State = EntityState.Modified;
 
-            Save();
+            //Save();
 
             return entity;
         }
@@ -58,7 +58,9 @@ namespace Architecture.Website.Models
                 entry.Property(property).IsModified = true;
             }
 
-            return Save() > 0 ? true : false;
+            //return Save() > 0 ? true : false;
+
+            return true;
         }
 
         public bool Delete(int id)

@@ -6,8 +6,7 @@ using System.Web;
 
 namespace Architecture.Website.Models
 {
-    public class UnitOfWork<T> : /*DbContext, */ IUnitOfWork<T>, IDisposable
-        where T : class
+    public class UnitOfWork : /*DbContext, */ IUnitOfWork, IDisposable
     {
         private readonly IRepository<Genre> _genreRepo;
         private readonly IRepository<Artist> _artistRepo;
@@ -33,8 +32,8 @@ namespace Architecture.Website.Models
         {
             get { return _albumRepo; }
         }
-        
-        
+
+
         public IRepository<Artist> ArtistRepository
         {
             get { return _artistRepo; }
