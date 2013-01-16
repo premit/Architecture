@@ -6,7 +6,8 @@ using System.Web;
 
 namespace Architecture.Website.Models
 {
-    public class UnitOfWork : /*DbContext, */ IUnitOfWork, IDisposable
+    public class UnitOfWork<T> : /*DbContext, */ IUnitOfWork<T>, IDisposable
+        where T : class
     {
         private readonly IRepository<Genre> _genreRepo;
         private readonly IRepository<Artist> _artistRepo;
@@ -14,9 +15,7 @@ namespace Architecture.Website.Models
         private readonly IEntitiesContext _context;
 
         public UnitOfWork(
-                IEntitiesContext context,
-                IRepository<Genre> genreRepo,
-                IRepository<Artist> artistRepo
+                IEntitiesContext context
             )
         {
             _context = context;

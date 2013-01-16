@@ -5,7 +5,8 @@ using System.Text;
 
 namespace Architecture.Website.Models
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork<T> : IDisposable
+        where T : class
     {
         IRepository<Genre> GenreRepository { get; }
         IRepository<Artist> ArtistRepository { get; }

@@ -70,7 +70,9 @@ namespace Architecture.Website.App_Start
             kernel.Bind<IAlbumService>().To<AlbumService>();
 
             // Register unit of work mappings here.
-            kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
+            kernel.Bind<IUnitOfWork<Genre>>().To<UnitOfWork<Genre>>();
+            kernel.Bind<IUnitOfWork<Artist>>().To<UnitOfWork<Artist>>();
+            kernel.Bind<IUnitOfWork<Album>>().To<UnitOfWork<Album>>();
         }
     }
 }

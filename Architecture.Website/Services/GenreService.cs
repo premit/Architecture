@@ -7,18 +7,18 @@ namespace Architecture.Website.Services
 {
     public class GenreService : IGenreService
     {
-        private IUnitOfWork _uow;
+        private IUnitOfWork<Genre> _genreUow;
 
         public GenreService(
-                IUnitOfWork uow
+                IUnitOfWork<Genre> genreUow
             )
         {
-            _uow = uow;
+            _genreUow = genreUow;
         }
 
         public IEnumerable<Genre> GetGenres()
         {
-            var genres = _uow.GenreRepository.FindAll()
+            var genres = _genreUow.GenreRepository.FindAll()
                 .OrderBy(g => g.Name)
                 .ToList();
 
@@ -27,7 +27,7 @@ namespace Architecture.Website.Services
 
         public Genre GetGenreById(int id)
         {
-            var genre = _uow.GenreRepository.Find(id);
+            var genre = _genreUow.GenreRepository.Find(id);
 
             if (genre == null)
             {
@@ -40,16 +40,16 @@ namespace Architecture.Website.Services
         public Genre CreateGenre(Genre genre)
         {
             genre.CreatedTime = DateTime.UtcNow;
-            var newGenre = _uow.GenreRepository.Create(genre);
+            var newGenre = _genreUow.GenreRepository.Create(genre);
 
             var artist = new Artist
             {
                 Name = "Test Artist A",
                 CreatedTime = DateTime.UtcNow
             };
-            _uow.ArtistRepository.Create(artist);
+            _genreUow.ArtistRepository.Create(artist);
 
-            _uow.Commit();
+            _genreUow.Commit();
 
             if (newGenre == null)
             {
@@ -62,13 +62,14 @@ namespace Architecture.Website.Services
         public Genre UpdateGenre(Genre genre)
         {
             genre.UpdatedTime = DateTime.UtcNow;
-            _uow.GenreRepository.Update(
+            _genreUow.GenreRepository.Update(
                 genre,
                 g => g.Name,
                 g => g.UpdatedTime
             );
+            ;
 
-            if (_uow.Commit() < 1)
+            if (_genreUow.Commit() < 1)
             {
                 throw new Exception("Failed to update genre.");
             }
@@ -78,7 +79,7 @@ namespace Architecture.Website.Services
 
         public bool DeleteGenre(int id)
         {
-            return _uow.GenreRepository.Delete(id);
+            return _genreUow.GenreRepository.Delete(id);
         }
     }
 }
