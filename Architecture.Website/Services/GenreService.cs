@@ -9,17 +9,14 @@ namespace Architecture.Website.Services
     {
         private IUnitOfWork _uow;
         private IRepository<Genre> _genreRepo;
-        private IRepository<Artist> _artistRepo;
 
         public GenreService(
                 IUnitOfWork uow,
-                IRepository<Genre> genreRepo,
-                IRepository<Artist> artistRepo
+                IRepository<Genre> genreRepo
             )
         {
             _uow = uow;
             _genreRepo = genreRepo;
-            _artistRepo = artistRepo;
         }
 
         public IEnumerable<Genre> GetGenres()
