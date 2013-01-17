@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Architecture.Website", "Architecture.Website\Architecture.Website.csproj", "{A3860B19-7C8B-441E-B90F-D50358CC69CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Architecture.Website.Tests", "Architecture.Website.Tests\Architecture.Website.Tests.csproj", "{4B1B5EAE-30C3-4543-ADF7-24D85F864FCA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Architecture.Tests", "Architecture.Website.Tests\Architecture.Tests.csproj", "{4B1B5EAE-30C3-4543-ADF7-24D85F864FCA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

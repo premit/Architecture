@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Architecture.Website;
 using Architecture.Website.Controllers;
 
-namespace Architecture.Website.Tests.Controllers
+namespace Architecture.Tests.Controllers
 {
     [TestClass]
     public class HomeControllerTest
