@@ -8,17 +8,23 @@ namespace Architecture.Website.Services
     public class GenreService : IGenreService
     {
         private IUnitOfWork _uow;
+        private IRepository<Genre> _genreRepo;
+        private IRepository<Artist> _artistRepo;
 
         public GenreService(
-                IUnitOfWork uow
+                IUnitOfWork uow,
+                IRepository<Genre> genreRepo,
+                IRepository<Artist> artistRepo
             )
         {
             _uow = uow;
+            _genreRepo = genreRepo;
+            _artistRepo = artistRepo;
         }
 
         public IEnumerable<Genre> GetGenres()
         {
-            var genres = _uow.GenreRepository.FindAll()
+            var genres = _genreRepo.FindAll()
                 .OrderBy(g => g.Name)
                 .ToList();
 
@@ -27,7 +33,7 @@ namespace Architecture.Website.Services
 
         public Genre GetGenreById(int id)
         {
-            var genre = _uow.GenreRepository.Find(id);
+            var genre = _genreRepo.Find(id);
 
             if (genre == null)
             {
@@ -40,15 +46,7 @@ namespace Architecture.Website.Services
         public Genre CreateGenre(Genre genre)
         {
             genre.CreatedTime = DateTime.UtcNow;
-            var newGenre = _uow.GenreRepository.Create(genre);
-
-            var artist = new Artist
-            {
-                Name = "Test Artist A",
-                CreatedTime = DateTime.UtcNow
-            };
-            _uow.ArtistRepository.Create(artist);
-
+            var newGenre = _genreRepo.Create(genre);
             _uow.Commit();
 
             if (newGenre == null)
@@ -62,7 +60,7 @@ namespace Architecture.Website.Services
         public Genre UpdateGenre(Genre genre)
         {
             genre.UpdatedTime = DateTime.UtcNow;
-            _uow.GenreRepository.Update(
+            _genreRepo.Update(
                 genre,
                 g => g.Name,
                 g => g.UpdatedTime
@@ -79,7 +77,7 @@ namespace Architecture.Website.Services
 
         public bool DeleteGenre(int id)
         {
-            return _uow.GenreRepository.Delete(id);
+            return _genreRepo.Delete(id);
         }
     }
 }

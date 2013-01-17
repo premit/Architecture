@@ -57,7 +57,7 @@ namespace Architecture.Website.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             // Register entity mappings here.
-            kernel.Bind<IEntitiesContext>().To<EntitiesContext>();
+            kernel.Bind<IEntitiesContext>().To<EntitiesContext>().InRequestScope();
 
             // Register repository mappings here.
             kernel.Bind<IRepository<Genre>>().To<Repository<Genre>>();
