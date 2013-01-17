@@ -70,7 +70,8 @@ namespace Architecture.Website.Models
             _context.Set<TEntity>()
                 .Remove(entity);
 
-            return Save() > 0 ? true : false;
+            //return Save() > 0 ? true : false;
+            return true;
         }
 
         public int Save()

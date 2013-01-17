@@ -77,7 +77,8 @@ namespace Architecture.Website.Services
 
         public bool DeleteGenre(int id)
         {
-            return _genreRepo.Delete(id);
+            _genreRepo.Delete(id);
+            return _uow.Commit() > 0 ? true : false;
         }
     }
 }

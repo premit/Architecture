@@ -8,12 +8,15 @@ namespace Architecture.Website.Services
 {
     public class AlbumService : IAlbumService
     {
+        private IUnitOfWork _uow;
         private IRepository<Album> _albumRepo;
 
         public AlbumService(
+                IUnitOfWork uow,
                 IRepository<Album> albumSvc
             )
         {
+            _uow = uow;
             _albumRepo = albumSvc;
         }
 
@@ -51,8 +54,10 @@ namespace Architecture.Website.Services
         public Album CreateAlbum(Album album)
         {
             album.CreatedTime = DateTime.UtcNow;
+            album = _albumRepo.Create(album);
+            _uow.Commit();
 
-            if (_albumRepo.Create(album) == null)
+            if (album == null)
             {
                 throw new Exception("Failed to create album.");
             }
@@ -63,12 +68,17 @@ namespace Architecture.Website.Services
         public Album UpdateAlbum(Album album)
         {
             album.UpdatedTime = DateTime.UtcNow;
+            _albumRepo.Update(
+                album,
+                a => a.GenreId,
+                a => a.ArtistId,
+                a => a.Title,
+                a => a.Price,
+                a => a.AlbumArtUrl,
+                a => a.UpdatedTime
+            );
 
-            if (!_albumRepo.Update(
-                    album,
-                    a => a.Title,
-                    a => a.UpdatedTime
-                ))
+            if (_uow.Commit() < 1)
             {
                 throw new Exception("Failed to update genre.");
             }
@@ -78,7 +88,8 @@ namespace Architecture.Website.Services
 
         public bool DeleteAlbum(int id)
         {
-            return _albumRepo.Delete(id);
+            _albumRepo.Delete(id);
+            return _uow.Commit() > 0 ? true : false;
         }
     }
 }

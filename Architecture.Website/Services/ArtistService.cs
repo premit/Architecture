@@ -7,12 +7,15 @@ namespace Architecture.Website.Services
 {
     public class ArtistService : IArtistService
     {
+        private IUnitOfWork _uow;
         private IRepository<Artist> _artistRepo;
 
         public ArtistService(
+                IUnitOfWork uow,
                 IRepository<Artist> artistRepo
             )
         {
+            _uow = uow;
             _artistRepo = artistRepo;
         }
 
@@ -38,8 +41,10 @@ namespace Architecture.Website.Services
         public Artist CreateArtist(Artist artist)
         {
             artist.CreatedTime = DateTime.UtcNow;
+            artist = _artistRepo.Create(artist);
+            _uow.Commit();
 
-            if (_artistRepo.Create(artist) == null)
+            if (artist == null)
             {
                 throw new Exception("Failed to create artist.");
             }
@@ -50,12 +55,13 @@ namespace Architecture.Website.Services
         public Artist UpdateArtist(Artist artist)
         {
             artist.UpdatedTime = DateTime.UtcNow;
+            _artistRepo.Update(
+                artist,
+                a => a.Name,
+                a => a.UpdatedTime
+            );
 
-            if (!_artistRepo.Update(
-                    artist,
-                    a => a.Name,
-                    a => a.UpdatedTime
-                ))
+            if (_uow.Commit() < 1)
             {
                 throw new Exception("Failed to update artist.");
             }
@@ -65,7 +71,8 @@ namespace Architecture.Website.Services
 
         public bool DeleteArtist(int id)
         {
-            return _artistRepo.Delete(id);
+            _artistRepo.Delete(id);
+            return _uow.Commit() > 0 ? true : false;
         }
     }
 }
