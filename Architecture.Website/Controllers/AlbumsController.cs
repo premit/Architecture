@@ -5,9 +5,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Architecture.Domain;
 using Architecture.Website.Helpers;
-using Architecture.Website.Models;
-using Architecture.Website.Services;
 
 namespace Architecture.Website.Controllers
 {
@@ -23,6 +22,13 @@ namespace Architecture.Website.Controllers
                 IAlbumService albumSvc
             )
         {
+            if (genreSvc == null)
+                throw new ArgumentNullException("genreSvc");
+            if (artistSvc == null)
+                throw new ArgumentNullException("artistSvc");
+            if (albumSvc == null)
+                throw new ArgumentNullException("albumSvc");
+
             _genreSvc = genreSvc;
             _artistSvc = artistSvc;
             _albumSvc = albumSvc;

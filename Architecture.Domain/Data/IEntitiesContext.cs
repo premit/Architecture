@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 
-namespace Architecture.Website.Models
+namespace Architecture.Domain
 {
     public interface IEntitiesContext
     {

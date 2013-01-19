@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Architecture.Website.Models
+namespace Architecture.Domain
 {
     public class Genre : IGenre
     {

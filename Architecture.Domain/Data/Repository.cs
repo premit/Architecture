@@ -4,7 +4,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Architecture.Website.Models
+namespace Architecture.Domain
 {
     public class Repository<TEntity> : IRepository<TEntity>, IDisposable
         where TEntity : class
@@ -14,20 +14,21 @@ namespace Architecture.Website.Models
         public Repository(
             IEntitiesContext context)
         {
+            if (context == null)
+                throw new ArgumentNullException("context");
             _context = context;
         }
 
-        public TEntity Create(TEntity entity)
+        public void Create(TEntity entity)
         {
+            if (entity == null)
+                throw new ArgumentNullException("entity");
+
             _context.Set<TEntity>()
                 .Add(entity);
-
-            //Save();
-
-            return entity;
         }
 
-        public TEntity Find(int id)
+        public TEntity FindById(int id = 0)
         {
             return _context.Set<TEntity>()
                 .Find(id);
@@ -38,17 +39,19 @@ namespace Architecture.Website.Models
             return _context.Set<TEntity>();
         }
 
-        public TEntity Update(TEntity entity)
+        public void Update(TEntity entity)
         {
+            if (entity == null)
+                throw new ArgumentNullException("entity");
+
             _context.Entry<TEntity>(entity).State = EntityState.Modified;
-
-            //Save();
-
-            return entity;
         }
 
-        public bool Update(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
+        public void Update(TEntity entity, params Expression<Func<TEntity, object>>[] properties)
         {
+            if (entity == null)
+                throw new ArgumentNullException("entity");
+
             _context.Set<TEntity>()
                 .Attach(entity);
             DbEntityEntry<TEntity> entry = _context.Entry(entity);
@@ -57,21 +60,14 @@ namespace Architecture.Website.Models
             {
                 entry.Property(property).IsModified = true;
             }
-
-            //return Save() > 0 ? true : false;
-
-            return true;
         }
 
-        public bool Delete(int id)
+        public void Delete(int id = 0)
         {
-            var entity = Find(id);
+            var entity = FindById(id);
 
             _context.Set<TEntity>()
                 .Remove(entity);
-
-            //return Save() > 0 ? true : false;
-            return true;
         }
 
         public int Save()

@@ -5,8 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Architecture.Website.Models;
-using Architecture.Website.Services;
+using Architecture.Domain;
 
 namespace Architecture.Website.Controllers
 {
@@ -18,6 +17,9 @@ namespace Architecture.Website.Controllers
                 IGenreService genreSvc
             )
         {
+            if (genreSvc == null)
+                throw new ArgumentNullException("genreSvc");
+
             _genreSvc = genreSvc;
         }
 
@@ -59,7 +61,7 @@ namespace Architecture.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                var newGenre = _genreSvc.CreateGenre(genre);
+                _genreSvc.CreateGenre(genre);
                 return RedirectToAction("Index");
             }
 

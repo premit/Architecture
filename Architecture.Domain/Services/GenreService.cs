@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Architecture.Website.Models;
 
-namespace Architecture.Website.Services
+namespace Architecture.Domain
 {
     public class GenreService : IGenreService
     {
@@ -15,6 +14,11 @@ namespace Architecture.Website.Services
                 IRepository<Genre> genreRepo
             )
         {
+            if (uow == null)
+                throw new ArgumentNullException("uow");
+            if (genreRepo == null)
+                throw new ArgumentNullException("genreRepo");
+
             _uow = uow;
             _genreRepo = genreRepo;
         }
@@ -24,37 +28,29 @@ namespace Architecture.Website.Services
             var genres = _genreRepo.FindAll()
                 .OrderBy(g => g.Name)
                 .ToList();
-
             return genres;
         }
 
-        public Genre GetGenreById(int id)
+        public Genre GetGenreById(int id = 0)
         {
-            var genre = _genreRepo.Find(id);
+            var genre = _genreRepo.FindById(id);
 
             if (genre == null)
-            {
                 throw new NullReferenceException("Genre does not exist.");
-            }
 
             return genre;
         }
 
-        public Genre CreateGenre(Genre genre)
+        public void CreateGenre(Genre genre)
         {
             genre.CreatedTime = DateTime.UtcNow;
-            var newGenre = _genreRepo.Create(genre);
-            _uow.Commit();
+            _genreRepo.Create(genre);
 
-            if (newGenre == null)
-            {
+            if (_uow.Commit() < 1)
                 throw new Exception("Failed to create genre.");
-            }
-
-            return genre;
         }
 
-        public Genre UpdateGenre(Genre genre)
+        public void UpdateGenre(Genre genre)
         {
             genre.UpdatedTime = DateTime.UtcNow;
             _genreRepo.Update(
@@ -65,17 +61,15 @@ namespace Architecture.Website.Services
             ;
 
             if (_uow.Commit() < 1)
-            {
                 throw new Exception("Failed to update genre.");
-            }
-
-            return genre;
         }
 
-        public bool DeleteGenre(int id)
+        public void DeleteGenre(int id = 0)
         {
             _genreRepo.Delete(id);
-            return _uow.Commit() > 0 ? true : false;
+
+            if (_uow.Commit() < 1)
+                throw new Exception("Failed to delete genre.");
         }
     }
 }

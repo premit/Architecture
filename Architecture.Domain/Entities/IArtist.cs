@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace Architecture.Website.Models
+namespace Architecture.Domain
 {
-    interface IGenre
+    interface IArtist
     {
-        int GenreId { get; set; }
+        int ArtistId { get; set; }
         string Name { get; set; }
         DateTime CreatedTime { get; set; }
         DateTime? UpdatedTime { get; set; }

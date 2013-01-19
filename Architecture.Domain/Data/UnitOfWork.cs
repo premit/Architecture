@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
 
-namespace Architecture.Website.Models
+namespace Architecture.Domain
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
@@ -14,6 +10,8 @@ namespace Architecture.Website.Models
                 IEntitiesContext context
             )
         {
+            if (context == null)
+                throw new ArgumentNullException("context");
             _context = context;
         }
 
@@ -24,7 +22,6 @@ namespace Architecture.Website.Models
 
         public void Rollback()
         {
-
         }
 
         // Dispose object

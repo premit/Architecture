@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using Architecture.Website.Models;
 
-namespace Architecture.Website.Services
+namespace Architecture.Domain
 {
     public class AlbumService : IAlbumService
     {
@@ -16,6 +15,11 @@ namespace Architecture.Website.Services
                 IRepository<Album> albumSvc
             )
         {
+            if (uow == null)
+                throw new ArgumentNullException("uow");
+            if (albumSvc == null)
+                throw new ArgumentNullException("albumSvc");
+
             _uow = uow;
             _albumRepo = albumSvc;
         }
@@ -39,33 +43,26 @@ namespace Architecture.Website.Services
             return albums;
         }
 
-        public Album GetAlbumById(int id)
+        public Album GetAlbumById(int id = 0)
         {
-            var album = _albumRepo.Find(id);
+            var album = _albumRepo.FindById(id);
 
             if (album == null)
-            {
                 throw new NullReferenceException("Album does not exist.");
-            }
 
             return album;
         }
 
-        public Album CreateAlbum(Album album)
+        public void CreateAlbum(Album album)
         {
             album.CreatedTime = DateTime.UtcNow;
-            album = _albumRepo.Create(album);
-            _uow.Commit();
+            _albumRepo.Create(album);
 
-            if (album == null)
-            {
+            if (_uow.Commit() < 1)
                 throw new Exception("Failed to create album.");
-            }
-
-            return album;
         }
 
-        public Album UpdateAlbum(Album album)
+        public void UpdateAlbum(Album album)
         {
             album.UpdatedTime = DateTime.UtcNow;
             _albumRepo.Update(
@@ -79,17 +76,15 @@ namespace Architecture.Website.Services
             );
 
             if (_uow.Commit() < 1)
-            {
                 throw new Exception("Failed to update genre.");
-            }
-
-            return album;
         }
 
-        public bool DeleteAlbum(int id)
+        public void DeleteAlbum(int id)
         {
             _albumRepo.Delete(id);
-            return _uow.Commit() > 0 ? true : false;
+
+            if (_uow.Commit() < 1)
+                throw new Exception("Failed to delete genre.");
         }
     }
 }

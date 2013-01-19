@@ -11,8 +11,7 @@ namespace Architecture.Website.App_Start
     using Ninject;
     using Ninject.Web.Common;
 
-    using Architecture.Website.Models;
-    using Architecture.Website.Services;
+    using Architecture.Domain;
 
     public static class NinjectWebCommon
     {
@@ -57,7 +56,7 @@ namespace Architecture.Website.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             // Register entity mappings here.
-            kernel.Bind<IEntitiesContext>().To<EntitiesContext>().InRequestScope();
+            kernel.Bind<Architecture.Domain.IEntitiesContext>().To<Architecture.Domain.EntitiesContext>().InRequestScope();
 
             // Register repository mappings here.
             kernel.Bind<IRepository<Genre>>().To<Repository<Genre>>();

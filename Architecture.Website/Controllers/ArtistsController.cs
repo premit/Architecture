@@ -5,8 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Architecture.Website.Models;
-using Architecture.Website.Services;
+using Architecture.Domain;
 
 namespace Architecture.Website.Controllers
 {
@@ -18,6 +17,9 @@ namespace Architecture.Website.Controllers
                 IArtistService artistSvc
             )
         {
+            if (artistSvc == null)
+                throw new ArgumentNullException("artistSvc");
+
             _artistSvc = artistSvc;
         }
 

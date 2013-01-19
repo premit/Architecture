@@ -1,6 +1,7 @@
 ﻿using System.Data.Entity;
+using Architecture.Domain;
 
-namespace Architecture.Website.Models
+namespace Architecture.Domain
 {
     public class EntitiesContext : DbContext, IEntitiesContext
     {

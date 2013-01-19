@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Architecture.Website.Models
+namespace Architecture.Domain
 {
     interface IAlbum
     {

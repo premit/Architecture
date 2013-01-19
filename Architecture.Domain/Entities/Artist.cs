@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Architecture.Website.Models
+namespace Architecture.Domain
 {
     public class Artist : IArtist
     {

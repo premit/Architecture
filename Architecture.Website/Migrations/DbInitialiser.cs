@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using Architecture.Domain;
 using Architecture.Website.Models;
 
 namespace Architecture.Website.Migrations
 {
-    public class DbInitialiser : DropCreateDatabaseIfModelChanges<Architecture.Website.Models.EntitiesContext>
+    public class DbInitialiser : DropCreateDatabaseIfModelChanges<Architecture.Domain.EntitiesContext>
     {
-        protected override void Seed(Architecture.Website.Models.EntitiesContext context)
+        protected override void Seed(Architecture.Domain.EntitiesContext context)
         {
             Genre[] genres =
             {

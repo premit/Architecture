@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Architecture.Website.Models;
 
-namespace Architecture.Website.Services
+namespace Architecture.Domain
 {
     public class ArtistService : IArtistService
     {
@@ -15,6 +14,11 @@ namespace Architecture.Website.Services
                 IRepository<Artist> artistRepo
             )
         {
+            if (uow == null)
+                throw new ArgumentNullException("uow");
+            if (artistRepo == null)
+                throw new ArgumentNullException("artistRepo");
+
             _uow = uow;
             _artistRepo = artistRepo;
         }
@@ -26,33 +30,26 @@ namespace Architecture.Website.Services
                 .ToList();
         }
 
-        public Artist GetArtistById(int id)
+        public Artist GetArtistById(int id = 0)
         {
-            var artist = _artistRepo.Find(id);
+            var artist = _artistRepo.FindById(id);
 
             if (artist == null)
-            {
                 throw new NullReferenceException("Artist does not exist.");
-            }
 
             return artist;
         }
 
-        public Artist CreateArtist(Artist artist)
+        public void CreateArtist(Artist artist)
         {
             artist.CreatedTime = DateTime.UtcNow;
-            artist = _artistRepo.Create(artist);
-            _uow.Commit();
+            _artistRepo.Create(artist);
 
-            if (artist == null)
-            {
+            if (_uow.Commit() < 1)
                 throw new Exception("Failed to create artist.");
-            }
-
-            return artist;
         }
 
-        public Artist UpdateArtist(Artist artist)
+        public void UpdateArtist(Artist artist)
         {
             artist.UpdatedTime = DateTime.UtcNow;
             _artistRepo.Update(
@@ -62,17 +59,15 @@ namespace Architecture.Website.Services
             );
 
             if (_uow.Commit() < 1)
-            {
                 throw new Exception("Failed to update artist.");
-            }
-
-            return artist;
         }
 
-        public bool DeleteArtist(int id)
+        public void DeleteArtist(int id = 0)
         {
             _artistRepo.Delete(id);
-            return _uow.Commit() > 0 ? true : false;
+
+            if (_uow.Commit() < 1)
+                throw new Exception("Failed to delete artist.");
         }
     }
 }
